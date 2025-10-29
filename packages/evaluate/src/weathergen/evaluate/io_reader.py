@@ -174,18 +174,26 @@ class Reader:
 
         # fill info from available metric file (if provided)
         available = {
-            "channel": set(available_data["channel"].values.ravel())
-            if available_data is not None
-            else set(),
-            "fstep": set(available_data["forecast_step"].values.ravel())
-            if available_data is not None
-            else set(),
-            "sample": set(available_data.coords["sample"].values.ravel())
-            if available_data is not None
-            else set(),
-            "ensemble": set(available_data["ens"].values.ravel())
-            if available_data is not None and "ens" in available_data.coords
-            else set(),
+            "channel": (
+                set(available_data["channel"].values.ravel())
+                if available_data is not None
+                else set()
+            ),
+            "fstep": (
+                set(available_data["forecast_step"].values.ravel())
+                if available_data is not None
+                else set()
+            ),
+            "sample": (
+                set(available_data.coords["sample"].values.ravel())
+                if available_data is not None
+                else set()
+            ),
+            "ensemble": (
+                set(available_data["ens"].values.ravel())
+                if available_data is not None and "ens" in available_data.coords
+                else set()
+            ),
         }
 
         # fill info from reader
@@ -264,9 +272,9 @@ class Reader:
             - fsteps: list of forecast steps or None if 'all'
             - samples: list of samples or None if 'all'
         """
-        assert mode == "plotting" or mode == "evaluation", (
-            "get_channels_fsteps_samples:: Mode should be either 'plotting' or 'evaluation'"
-        )
+        assert (
+            mode == "plotting" or mode == "evaluation"
+        ), "get_channels_fsteps_samples:: Mode should be either 'plotting' or 'evaluation'"
 
         stream_cfg = self.get_stream(stream)
         assert stream_cfg.get(mode, False), "Mode does not exist in stream config. Please add it."
@@ -279,14 +287,14 @@ class Reader:
             ensemble = ["mean"]
 
         if isinstance(fsteps, str) and fsteps != "all":
-            assert re.match(r"^\d+-\d+$", fsteps), (
-                "String format for forecast_step in config must be 'digit-digit' or 'all'"
-            )
+            assert re.match(
+                r"^\d+-\d+$", fsteps
+            ), "String format for forecast_step in config must be 'digit-digit' or 'all'"
             fsteps = list(range(int(fsteps.split("-")[0]), int(fsteps.split("-")[1]) + 1))
         if isinstance(samples, str) and samples != "all":
-            assert re.match(r"^\d+-\d+$", samples), (
-                "String format for sample in config must be 'digit-digit' or 'all'"
-            )
+            assert re.match(
+                r"^\d+-\d+$", samples
+            ), "String format for sample in config must be 'digit-digit' or 'all'"
             samples = list(range(int(samples.split("-")[0]), int(samples.split("-")[1]) + 1))
 
         return DataAvailability(

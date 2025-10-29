@@ -26,6 +26,12 @@ dev = [
 evaluation = "weathergen.evaluate.run_evaluation:evaluate"
 export = "weathergen.evaluate.export_inference:export"
 
+
+[tool.black]
+
+# Wide rows
+line-length = 100
+
 # The linting configuration
 [tool.ruff]
 

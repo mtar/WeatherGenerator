@@ -241,9 +241,9 @@ class Scores:
         if score_name in self.det_metrics_dict.keys():
             f = self.det_metrics_dict[score_name]
         elif score_name in self.prob_metrics_dict.keys():
-            assert self.ens_dim in data.prediction.dims, (
-                f"Probablistic score {score_name} chosen, but ensemble dimension {self.ens_dim} not found in prediction data"
-            )
+            assert (
+                self.ens_dim in data.prediction.dims
+            ), f"Probablistic score {score_name} chosen, but ensemble dimension {self.ens_dim} not found in prediction data"
             f = self.prob_metrics_dict[score_name]
         else:
             raise ValueError(
@@ -271,9 +271,9 @@ class Scores:
         score_args_map = {
             "froct": ["p", "gt", "p_next", "gt_next"],
             "troct": ["p", "gt", "p_next", "gt_next"],
-            "acc":   ["p", "gt", "c"],
-            "fact":  ["p", "c"],
-            "tact":  ["gt", "c"],
+            "acc": ["p", "gt", "c"],
+            "fact": ["p", "c"],
+            "tact": ["gt", "c"],
         }
 
         available = {
@@ -284,7 +284,7 @@ class Scores:
             "c": data.climatology,
         }
 
-        #assign p and gt by default if metrics do not have specific args
+        # assign p and gt by default if metrics do not have specific args
         keys = score_args_map.get(score_name, ["p", "gt"])
         args = {k: available[k] for k in keys}
 
@@ -490,9 +490,9 @@ class Scores:
         if scale_dims:
             scale_dims = to_list(scale_dims)
 
-            assert all([dim in p.dims for dim in scale_dims]), (
-                f"Provided scale dimensions {scale_dims} are not all present in the prediction data dimensions {p.dims}."
-            )
+            assert all(
+                [dim in p.dims for dim in scale_dims]
+            ), f"Provided scale dimensions {scale_dims} are not all present in the prediction data dimensions {p.dims}."
 
             len_dims = np.array([p.sizes[dim] for dim in scale_dims])
             l1 /= np.prod(len_dims)
@@ -540,9 +540,9 @@ class Scores:
         if scale_dims:
             scale_dims = to_list(scale_dims)
 
-            assert all([dim in p.dims for dim in scale_dims]), (
-                f"Provided scale dimensions {scale_dims} are not all present in the prediction data dimensions {p.dims}."
-            )
+            assert all(
+                [dim in p.dims for dim in scale_dims]
+            ), f"Provided scale dimensions {scale_dims} are not all present in the prediction data dimensions {p.dims}."
 
             len_dims = np.array([p.sizes[dim] for dim in scale_dims])
             l2 /= np.prod(len_dims)
@@ -643,7 +643,7 @@ class Scores:
                 "Cannot calculate variance-normalized root mean squared error without aggregation dimensions (agg_dims=None)."
             )
 
-        vrmse = np.sqrt(self.calc_mse(p, gt, group_by_coord) / (gt.var(dim=self._agg_dims)+1e-6))
+        vrmse = np.sqrt(self.calc_mse(p, gt, group_by_coord) / (gt.var(dim=self._agg_dims) + 1e-6))
 
         return vrmse
 
@@ -873,7 +873,7 @@ class Scores:
             act = ano.std(dim=spatial_dims)
 
         return act
-    
+
     def calc_fact(
         self,
         p: xr.DataArray,
@@ -902,7 +902,7 @@ class Scores:
         """
 
         return self._calc_act(p, c, group_by_coord, spatial_dims)
-    
+
     def calc_tact(
         self,
         gt: xr.DataArray,
@@ -1176,9 +1176,9 @@ class Scores:
             return 1.0 - seeps_val
 
         if p.ndim == 3:
-            assert len(spatial_dims) == 2, (
-                "Provide two spatial dimensions for three-dimensional data."
-            )
+            assert (
+                len(spatial_dims) == 2
+            ), "Provide two spatial dimensions for three-dimensional data."
             prediction, ground_truth = (
                 p.stack({"xy": spatial_dims}),
                 gt.stack({"xy": spatial_dims}),
@@ -1193,9 +1193,9 @@ class Scores:
             raise ValueError("Data must be a two-or-three-dimensional array.")
 
         # check dimensioning of data
-        assert prediction.ndim <= 2, (
-            f"Data must be one- or two-dimensional, but has {prediction.ndim} dimensions. Check if stacking with spatial_dims may help."
-        )
+        assert (
+            prediction.ndim <= 2
+        ), f"Data must be one- or two-dimensional, but has {prediction.ndim} dimensions. Check if stacking with spatial_dims may help."
 
         if prediction.ndim == 1:
             seeps_values_all = seeps(ground_truth, prediction, t1.values, t3, seeps_weights)
@@ -1445,9 +1445,9 @@ class Scores:
         """
         method = Scores.calc_geo_spatial_diff.__name__
         # sanity checks
-        assert isinstance(scalar_field, xr.DataArray), (
-            f"Scalar_field of {method} must be a xarray DataArray."
-        )
+        assert isinstance(
+            scalar_field, xr.DataArray
+        ), f"Scalar_field of {method} must be a xarray DataArray."
         assert order in [1, 2], f"Order for {method} must be either 1 or 2."
 
         dims = list(scalar_field.dims)

@@ -611,12 +611,12 @@ class LinePlots:
         -------
             data_list, label_list - lists of data and labels
         """
-        assert type(data) == xr.DataArray or type(data) == list, (
-            "Compare::plot - Data should be of type xr.DataArray or list"
-        )
-        assert type(labels) == str or type(labels) == list, (
-            "Compare::plot - Labels should be of type str or list"
-        )
+        assert (
+            type(data) == xr.DataArray or type(data) == list
+        ), "Compare::plot - Data should be of type xr.DataArray or list"
+        assert (
+            type(labels) == str or type(labels) == list
+        ), "Compare::plot - Labels should be of type str or list"
 
         # convert to lists
 
@@ -745,9 +745,9 @@ class LinePlots:
 
         data_list, label_list = self._check_lengths(data, labels)
 
-        assert x_dim in data_list[0].dims, (
-            "x dimension '{x_dim}' not found in data dimensions {data_list[0].dims}"
-        )
+        assert (
+            x_dim in data_list[0].dims
+        ), "x dimension '{x_dim}' not found in data dimensions {data_list[0].dims}"
 
         fig = plt.figure(figsize=(12, 6), dpi=self.dpi_val)
 

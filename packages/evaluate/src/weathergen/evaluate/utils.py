@@ -144,9 +144,9 @@ def calc_scores_per_stream(
             )
             continue
 
-        assert int(combined_metrics.forecast_step) == int(fstep), (
-            "Different steps in data and metrics. Please check."
-        )
+        assert int(combined_metrics.forecast_step) == int(
+            fstep
+        ), "Different steps in data and metrics. Please check."
 
         criteria = {
             "forecast_step": int(combined_metrics.forecast_step),
@@ -324,9 +324,9 @@ def metric_list_to_json(
     epoch :
         Epoch number.
     """
-    assert len(metrics_list) == len(npoints_sample_list) == len(streams), (
-        "The lengths of metrics_list, npoints_sample_list, and streams must be the same."
-    )
+    assert (
+        len(metrics_list) == len(npoints_sample_list) == len(streams)
+    ), "The lengths of metrics_list, npoints_sample_list, and streams must be the same."
 
     reader.metrics_dir.mkdir(parents=True, exist_ok=True)
 
