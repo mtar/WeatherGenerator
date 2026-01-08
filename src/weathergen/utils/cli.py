@@ -92,7 +92,7 @@ def _add_general_arguments(parser: argparse.ArgumentParser):
         type=Path,
         nargs="+",
         default=[],
-        help="Optional experiment specfic configuration files in ascending order of precedence.",
+        help="Optional experiment specific configuration files in ascending order of precedence.",
     )
     parser.add_argument(
         "--run_id",
@@ -112,6 +112,14 @@ def _add_general_arguments(parser: argparse.ArgumentParser):
             " This takes precedence over overwrites passed via --config or --finetune_forecast."
             " Individual items should be of the form: parent_obj.nested_obj=value"
         ),
+    )
+    parser.add_argument(
+        "--base-config",
+        type=Path,
+        help=(
+            "Path to the base configuration file."
+            "If not provided, the default configuration is used."
+        )
     )
 
 

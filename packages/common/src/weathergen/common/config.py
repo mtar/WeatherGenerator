@@ -176,6 +176,7 @@ def load_config(
     private_home: Path | None,
     from_run_id: str | None,
     mini_epoch: int | None,
+    base: Path | None = None,
     *overwrites: Path | dict | Config,
 ) -> Config:
     """
@@ -183,10 +184,11 @@ def load_config(
     private configs "secrets" section will be discarted.
 
     Args:
-        private_home: Configuration file containing platform dependent information and secretes
+        private_home: Configuration file containing platform dependent information and secrets
         from_run_id: Run id of the pretrained WeatherGenerator model
         to continue training or inference
         mini_epoch: mini_epoch of the checkpoint to load. -1 indicates last checkpoint available.
+        base: Path to the base configuration file. Uses default configuration if None.
         *overwrites: Additional overwrites from different sources
 
     Note: The order of precendence for merging the final config is in ascending order:
@@ -214,7 +216,7 @@ def load_config(
     private_config = set_paths(private_config)
 
     if from_run_id is None:
-        base_config = _load_default_conf()
+        base_config = _load_base_conf(base)
     else:
         base_config = load_model_config(
             from_run_id, mini_epoch, private_config.get("model_path", None)
@@ -381,9 +383,14 @@ def _load_private_conf(private_home: Path | None = None) -> DictConfig:
     return private_cf
 
 
-def _load_default_conf() -> Config:
-    """Deserialize default configuration."""
-    c = OmegaConf.load(_DEFAULT_CONFIG_PTH)
+def _load_base_conf(base: Path | None) -> Config:
+    """Return the base configuration"""
+    if base is None:
+        _logger.info("Deserialize default configuration.")
+        c = OmegaConf.load(_DEFAULT_CONFIG_PTH)
+    else:
+        _logger.info(f"Loading specified base config from file: {base}.")
+        c = overwrite_config = OmegaConf.load(base)
     assert isinstance(c, Config)
     return c
 
